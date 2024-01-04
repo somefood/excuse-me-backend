@@ -12,6 +12,7 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
+    open-in-view: false
 
   flyway:
     enabled: true
@@ -26,4 +27,4 @@ logging:
         type:
           descriptor:
             sql: trace
-        
+
