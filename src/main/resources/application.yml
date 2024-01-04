@@ -4,3 +4,26 @@ spring:
     url: jdbc:mysql://localhost:3308/excuse-me
     username: root
     password: mysql
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+
+  flyway:
+    enabled: true
+    url: jdbc:mysql://localhost:3308/excuse-me
+    user: root
+    password: mysql
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
+        
