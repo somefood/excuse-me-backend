@@ -1,0 +1,15 @@
+version: '3'
+services:
+  database:
+    container_name: test-local-db
+    image: mysql:8.0.33
+    environment:
+      MYSQL_DATABASE: excuse-me
+      MYSQL_ROOT_PASSWORD: mysql
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3308/MYSQL_DATABASE?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: mysql
+    ports:
+      - "3308:3306"
+    volumes:
+      - .:/database
