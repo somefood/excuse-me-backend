@@ -10,6 +10,6 @@ public class ExceptionTestController {
 
     @GetMapping("/errorTest")
     public void test() {
-        throw new CustomException(ErrorCode.TEST_ERROR, Map.of("에러", "테스트"));
+        throw new CustomException(TestErrorCode.TEST_ERROR, Map.of("에러", "테스트"));
     }
 }

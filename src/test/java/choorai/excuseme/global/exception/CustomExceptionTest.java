@@ -13,7 +13,7 @@ class CustomExceptionTest {
     @Test
     void get_property_and_value_with_delimiter() {
         // given
-        final CustomException exception = new CustomException(ErrorCode.TEST_ERROR, Map.of("정보1", "테스트1"));
+        final CustomException exception = new CustomException(TestErrorCode.TEST_ERROR, Map.of("정보1", "테스트1"));
 
         // when
         final String result = exception.getInputValue();

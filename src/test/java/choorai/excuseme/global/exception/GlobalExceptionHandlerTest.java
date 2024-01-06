@@ -23,7 +23,7 @@ public class GlobalExceptionHandlerTest extends AcceptanceTest {
                 .body().as(CustomExceptionResponse.class);
 
         // then
-        final CustomExceptionResponse expect = new CustomExceptionResponse(ErrorCode.TEST_ERROR.getCode(), ErrorCode.TEST_ERROR.getMessage());
+        final CustomExceptionResponse expect = new CustomExceptionResponse(TestErrorCode.TEST_ERROR.getCode(), TestErrorCode.TEST_ERROR.getMessage());
         assertThat(result).usingRecursiveComparison()
                 .isEqualTo(expect);
     }

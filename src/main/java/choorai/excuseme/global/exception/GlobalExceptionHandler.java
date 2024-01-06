@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
 
     private void trackLog(final CustomException exception, final HttpServletRequest request) {
         if (exception.isInputFieldsNUll()) {
-            log.error(ERROR_LOG_FORMAT, request.getRequestURL(), exception.getErrorCode().getCode(), exception.getErrorCode().getMessage());
+            log.error(ERROR_LOG_FORMAT, request.getRequestURL(), exception.getCode(), exception.getMessage());
             return;
         }
         log.error(ERROR_LOG_FORMAT_WITH_WRONG_INPUT, request.getRequestURL(), exception.getCode(), exception.getMessage(), exception.getInputValue());
