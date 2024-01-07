@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    private static final String ERROR_LOG_FORMAT = "url= {}, errorCode= {}, errorMessage= {}";
-    private static final String ERROR_LOG_FORMAT_WITH_WRONG_INPUT = "url= {}, errorCode= {}, errorMessage= {}, errorInput= {}";
+    private static final String ERROR_LOG_FORMAT = "url={}, errorCode={}, errorMessage={}";
+    private static final String ERROR_LOG_FORMAT_WITH_WRONG_INPUT = "url={}, errorCode={}, errorMessage={}, errorInput={}";
 
     @ExceptionHandler(CommonException.class)
     public ResponseEntity<CustomExceptionResponse> handleException(
