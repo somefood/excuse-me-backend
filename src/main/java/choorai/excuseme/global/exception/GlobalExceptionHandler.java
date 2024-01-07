@@ -14,16 +14,16 @@ public class GlobalExceptionHandler {
     private static final String ERROR_LOG_FORMAT = "url= {}, errorCode= {}, errorMessage= {}";
     private static final String ERROR_LOG_FORMAT_WITH_WRONG_INPUT = "url= {}, errorCode= {}, errorMessage= {}, errorInput= {}";
 
-    @ExceptionHandler(CustomException.class)
+    @ExceptionHandler(CommonException.class)
     public ResponseEntity<CustomExceptionResponse> handleException(
-            final CustomException exception,
+            final CommonException exception,
             final HttpServletRequest request
     ) {
         trackLog(exception, request);
         return CustomExceptionResponse.toResponseEntity(exception.getErrorCode());
     }
 
-    private void trackLog(final CustomException exception, final HttpServletRequest request) {
+    private void trackLog(final CommonException exception, final HttpServletRequest request) {
         if (exception.isInputFieldsNUll()) {
             log.error(ERROR_LOG_FORMAT, request.getRequestURL(), exception.getCode(), exception.getMessage());
             return;

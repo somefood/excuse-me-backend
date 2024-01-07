@@ -7,13 +7,13 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class CustomExceptionTest {
+class CommonExceptionTest {
 
     @DisplayName("입력된 정보를 Property: {인자}, Value: {입력한 값} 형태의 문자열로 반환한다.")
     @Test
     void get_property_and_value_with_delimiter() {
         // given
-        final CustomException exception = new CustomException(TestErrorCode.TEST_ERROR, Map.of("정보1", "테스트1"));
+        final CommonException exception = new CommonException(TestErrorCode.TEST_ERROR, Map.of("정보1", "테스트1"));
 
         // when
         final String result = exception.getInputValue();
