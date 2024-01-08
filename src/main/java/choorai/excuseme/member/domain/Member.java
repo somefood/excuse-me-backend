@@ -9,6 +9,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Table(indexes = {
+        @Index(name = "idx_id", columnList = "id"),
+        @Index(name = "idx_username", columnList = "username")
+})
 public class Member extends BaseEntity {
 
     @Id
