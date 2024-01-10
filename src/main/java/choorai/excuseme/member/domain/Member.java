@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(indexes = {
         @Index(name = "idx_id", columnList = "id"),
-        @Index(name = "idx_username", columnList = "username")
+        @Index(name = "idx_username", columnList = "username", unique = true)
 })
 public class Member extends BaseEntity {
 
@@ -19,7 +19,7 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column
     private String username;
 
     private String password;
