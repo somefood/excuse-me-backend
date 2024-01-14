@@ -38,22 +38,4 @@
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
     </root>
-
-    <!-- 서버 설정시 수정 필요 -->
-    <!--    <springProfile name="local">-->
-    <!--        <logger name="choorai.excuseme" level="DEBUG" />-->
-    <!--        <root level="INFO">-->
-    <!--            <appender-ref ref="CONSOLE" />-->
-    <!--        </root>-->
-    <!--    </springProfile>-->
-    <!--    <springProfile name="dev">-->
-    <!--        <root level="INFO">-->
-    <!--            <appender-ref ref="FILE" />-->
-    <!--        </root>-->
-    <!--    </springProfile>-->
-    <!--    <springProfile name="prod">-->
-    <!--        <root level="ERROR">-->
-    <!--            <appender-ref ref="FILE" />-->
-    <!--        </root>-->
-    <!--    </springProfile>-->
 </configuration>
