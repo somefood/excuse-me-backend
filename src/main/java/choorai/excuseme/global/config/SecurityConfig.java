@@ -17,6 +17,10 @@ public class SecurityConfig {
         http.csrf(configurer -> configurer.disable());
         http.formLogin(configurer -> configurer.disable());
         http.sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        http.authorizeHttpRequests(configurer ->
+                configurer.requestMatchers("/actuator/**").permitAll()
+                        .anyRequest().authenticated());
         return http.build();
     }
 }

@@ -28,3 +28,11 @@ logging:
           descriptor:
             sql: trace
 
+management:
+  endpoint:
+    health:
+      show-components: always # db, disk, ping 등 추가적인 연결 확인도 할 수 있음. 전부 UP이어야 최종 status가 UP
+  endpoints:
+    web:
+      exposure:
+        include: health # web으로 접속 시 표시할 항목 추가
