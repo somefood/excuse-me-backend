@@ -1,5 +1,5 @@
 CREATE TABLE member
-(정
+(
     id         BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     username   VARCHAR(255)          NOT NULL,
     password   VARCHAR(255)          NOT NULL,
