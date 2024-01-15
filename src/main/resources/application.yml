@@ -27,6 +27,8 @@ logging:
         type:
           descriptor:
             sql: trace
+slack:
+  webhook-uri: https://hooks.slack.com/services/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
 
 management:
   endpoint:
