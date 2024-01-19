@@ -22,4 +22,21 @@ public class Member extends BaseEntity {
     private String username;
 
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    private Member(String username, String password, Role role) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
+
+    public static Member createNormalMember(String username, String password) {
+        return new Member(username, password, Role.USER);
+    }
+
+    public static Member createAdminMember(String username, String password) {
+        return new Member(username, password, Role.ADMIN);
+    }
 }
