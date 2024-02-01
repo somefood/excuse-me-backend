@@ -38,3 +38,7 @@ management:
     web:
       exposure:
         include: health # web으로 접속 시 표시할 항목 추가
+
+jwt:
+  secret:
+    key: WgNeE$H*rHx'edDr$u7KTP)`dz9B$;b=
