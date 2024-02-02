@@ -7,6 +7,9 @@ public enum MemberErrorCode implements ErrorCode {
 
     ALREADY_EXIST(HttpStatus.BAD_REQUEST, "잘못된 입력", "이미 존재하는 회원입니다."),
     USERNAME_NOT_FOUND(HttpStatus.BAD_REQUEST, "잘못된 입력", "해당 유저를 찾을 수 없습니다."),
+    FAIL_GOOGLE_OAUTH(HttpStatus.BAD_REQUEST, "처리 과정 에러", "Google 사용자 정보를 가져오는데 실패했습니다."),
+    INVALID_SOCIAL_LOGIN_TYPE(HttpStatus.BAD_REQUEST, "잘못된 입력", "알 수 없는 소셜 로그인 형식입니다."),
+    USERNAME_NOT_FOUND(HttpStatus.BAD_REQUEST, "잘못된 입력", "해당 유저를 찾을 수 없습니다."),
     WRONG_USERNAME(HttpStatus.BAD_REQUEST, "잘못된 입력", "이메일 형식이 아닙니다."),
     WRONG_PASSWORD(HttpStatus.BAD_REQUEST, "잘못된 입력", "비밀번호는 숫자, 영어, 특수문자를 모두 포함한 6자에서 20자이어야 합니다."),
     WRONG_PHONE_NUMBER(HttpStatus.BAD_REQUEST, "잘못된 입력", "전화번호는 -를 제외한 11자이어야 합니다.");
