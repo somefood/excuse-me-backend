@@ -36,10 +36,11 @@ public class MemberController {
         return new ResponseEntity<>(loginResponse, HttpStatus.OK);
     }
 
-    @PostMapping("/oauth/login")
-    public ResponseEntity<SignResponse> oauthLogin(@RequestBody OAuthRequest oAuthRequest) {
-        SignResponse oAuthResponse = oauthService.oAuthLogin(oAuthRequest);
-        // 토큰 발급 -> memberService.login 참고해서 jwt 뱉는 로직 하나 만들기
+    @PostMapping("/oauth/login/{loginType}")
+    public ResponseEntity<SignResponse> oauthLogin(
+            @PathVariable("loginType") String socialLoginType,
+            @RequestBody OAuthRequest oAuthRequest) {
+        SignResponse oAuthResponse = oauthService.oAuthLogin(socialLoginType, oAuthRequest);
         return new ResponseEntity<>(oAuthResponse, HttpStatus.OK);
     }
 }
