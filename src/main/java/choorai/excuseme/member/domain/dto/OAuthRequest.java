@@ -6,8 +6,6 @@ import lombok.Getter;
 @Getter
 public class OAuthRequest {
 
-    private String socialLoginType;
-
     private String accessToken;
 
 }
