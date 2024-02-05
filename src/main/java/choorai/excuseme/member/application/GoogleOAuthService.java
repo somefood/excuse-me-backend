@@ -9,13 +9,13 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 @Slf4j
 @RequiredArgsConstructor
-@Component
+@Service
 public class GoogleOAuthService {
 
     private static final String GOOGLE_USERINFO_REQUEST_URL = "https://www.googleapis.com/oauth2/v2/userinfo";
@@ -23,21 +23,22 @@ public class GoogleOAuthService {
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
 
-    public ResponseEntity<String> requestUserInfo(String accessToken) {
+    public GoogleUser getGoogleUser(String accessToken) throws JsonProcessingException {
+        ResponseEntity<String> userInfoResponse = requestUserInfo(accessToken);
+        String userInfo = userInfoResponse.getBody();
+        log.info("Google User Info  = {}", userInfo);
+        return objectMapper.readValue(userInfo, GoogleUser.class);
+    }
+
+    private ResponseEntity<String> requestUserInfo(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization","Bearer "+accessToken);
+        headers.set("Authorization", "Bearer " + accessToken);
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
-        ResponseEntity<String> response = restTemplate.exchange(
+        return restTemplate.exchange(
                 GOOGLE_USERINFO_REQUEST_URL,
                 HttpMethod.GET,
                 request,
                 String.class);
-        log.info("response.getBody() = {}", response.getBody());
-        return response;
-    }
-
-    public GoogleUser getUserInfo(ResponseEntity<String> userInfoResponse) throws JsonProcessingException {
-        return  objectMapper.readValue(userInfoResponse.getBody(), GoogleUser.class);
     }
 }
