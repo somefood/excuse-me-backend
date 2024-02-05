@@ -10,7 +10,6 @@ import choorai.excuseme.member.exception.MemberErrorCode;
 import choorai.excuseme.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -25,16 +24,16 @@ public class OauthService {
     private final GoogleOAuthService googleOAuthService;
 
 
-    public SignResponse oAuthLogin(OAuthRequest request) {
-        String socialLoginType = request.getSocialLoginType();
-        String accessToken = request.getAccessToken();
+    public SignResponse oAuthLogin(String socialLoginType, OAuthRequest oAuthRequest) {
+        String accessToken = oAuthRequest.getAccessToken();
+        socialLoginType = socialLoginType.toUpperCase();
         if (socialLoginType.equals("GOOGLE")) {
             try {
-                ResponseEntity<String> userInfoResponse = googleOAuthService.requestUserInfo(accessToken);
-                GoogleUser googleUser = googleOAuthService.getUserInfo(userInfoResponse);
-                log.info("googleUser = {}", googleUser);
+                GoogleUser googleUser = googleOAuthService.getGoogleUser(accessToken);
+                log.info("get GoogleUserInfo = {}", googleUser);
                 return getOAuthResponse(googleUser.getEmail());
             } catch (Exception e) {
+                log.debug("origin Error = {}", e);
                 throw new MemberException(MemberErrorCode.FAIL_GOOGLE_OAUTH);
             }
         }
@@ -43,7 +42,10 @@ public class OauthService {
 
     private SignResponse getOAuthResponse(String username) {
         Optional<Member> findMember = memberRepository.findByUsername(username);
-        SignRequest signRequest = new SignRequest(username, "");
+        SignRequest signRequest = SignRequest.builder()
+                .username(username)
+                .password("")
+                .build();
         if (findMember.isEmpty()) {
             memberService.register(signRequest);
         }
