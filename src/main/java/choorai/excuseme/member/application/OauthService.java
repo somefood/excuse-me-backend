@@ -4,7 +4,7 @@ import choorai.excuseme.member.domain.Member;
 import choorai.excuseme.member.domain.dto.OAuthRequest;
 import choorai.excuseme.member.domain.dto.SignRequest;
 import choorai.excuseme.member.domain.dto.SignResponse;
-import choorai.excuseme.member.domain.oauth.GoogleUser;
+import choorai.excuseme.member.domain.dto.GoogleUser;
 import choorai.excuseme.member.domain.repository.MemberRepository;
 import choorai.excuseme.member.exception.MemberErrorCode;
 import choorai.excuseme.member.exception.MemberException;
@@ -23,15 +23,14 @@ public class OauthService {
     private final MemberService memberService;
     private final GoogleOAuthService googleOAuthService;
 
-
     public SignResponse oAuthLogin(String socialLoginType, OAuthRequest oAuthRequest) {
-        String accessToken = oAuthRequest.getAccessToken();
+        String accessToken = oAuthRequest.accessToken();
         socialLoginType = socialLoginType.toUpperCase();
         if (socialLoginType.equals("GOOGLE")) {
             try {
                 GoogleUser googleUser = googleOAuthService.getGoogleUser(accessToken);
                 log.info("get GoogleUserInfo = {}", googleUser);
-                return getOAuthResponse(googleUser.getEmail());
+                return getOAuthResponse(googleUser.email());
             } catch (Exception e) {
                 log.debug("origin Error = {}", e);
                 throw new MemberException(MemberErrorCode.FAIL_GOOGLE_OAUTH);
