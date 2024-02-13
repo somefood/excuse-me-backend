@@ -1,11 +1,11 @@
 package choorai.excuseme.member.domain.dto;
 
+import lombok.Builder;
 
-import lombok.Getter;
+public record OAuthRequest(String accessToken) {
 
-@Getter
-public class OAuthRequest {
+    @Builder
+    public OAuthRequest {
 
-    private String accessToken;
-
+    }
 }

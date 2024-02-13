@@ -1,6 +1,6 @@
 package choorai.excuseme.member.application;
 
-import choorai.excuseme.member.domain.oauth.GoogleUser;
+import choorai.excuseme.member.domain.dto.GoogleUser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
