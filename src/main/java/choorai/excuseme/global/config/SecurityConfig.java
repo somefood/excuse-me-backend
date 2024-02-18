@@ -55,7 +55,7 @@ public class SecurityConfig {
         });
 
         http.authorizeHttpRequests(configurer ->
-                configurer.requestMatchers("/actuator/**").permitAll()
+                configurer.requestMatchers("/actuator/**", "/error/**").permitAll()
                         .requestMatchers("/members/register", "/members/login").permitAll()
                         .anyRequest().authenticated()
         );

@@ -25,6 +25,17 @@ public class MemberLecture extends BaseEntity {
     @JoinColumn(name = "lecture_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_lecture"))
     private Lecture lecture;
 
+    @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(255) NOT NULL")
     private ProgressStatus progressStatus;
+
+    public MemberLecture(final Member member, final Lecture lecture) {
+        this.member = member;
+        this.lecture = lecture;
+        this.progressStatus = ProgressStatus.NOT_WATCHED;
+    }
+
+    public void changeProgressStatus(final ProgressStatus progressStatus) {
+        this.progressStatus = progressStatus;
+    }
 }
