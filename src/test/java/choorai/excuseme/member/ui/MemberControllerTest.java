@@ -6,6 +6,7 @@ import choorai.excuseme.member.application.dto.LoginRequest;
 import choorai.excuseme.member.application.dto.LoginResponse;
 import choorai.excuseme.member.application.dto.SignRequest;
 import choorai.excuseme.member.domain.Member;
+import choorai.excuseme.member.domain.UserName;
 import choorai.excuseme.member.domain.repository.MemberRepository;
 import choorai.excuseme.support.AcceptanceTest;
 import io.restassured.RestAssured;
@@ -32,7 +33,7 @@ class MemberControllerTest extends AcceptanceTest {
     void register_member() {
         // given
         final SignRequest request = new SignRequest("a@email.com",
-                                                    "password",
+                                                    "password1@",
                                                     "이름",
                                                     "MEN",
                                                     "20240219",
@@ -45,7 +46,7 @@ class MemberControllerTest extends AcceptanceTest {
             .then().statusCode(HttpStatus.CREATED.value());
 
         // then
-        final Optional<Member> registeredMember = memberRepository.findByUsername(request.id());
+        final Optional<Member> registeredMember = memberRepository.findByUsername(new UserName(request.id()));
         assertThat(registeredMember).isNotEmpty();
     }
 
@@ -54,7 +55,7 @@ class MemberControllerTest extends AcceptanceTest {
     void login_member() {
         // given
         final SignRequest registerRequest = new SignRequest("a@email.com",
-                                                            "password",
+                                                            "1password1!",
                                                             "이름",
                                                             "MEN",
                                                             "20240219",

@@ -1,6 +1,7 @@
 package choorai.excuseme.global.security;
 
 import choorai.excuseme.member.domain.Member;
+import choorai.excuseme.member.domain.UserName;
 import choorai.excuseme.member.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,8 +17,8 @@ public class JpaUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Invalid authentication"));
+        Member member = memberRepository.findByUsername(new UserName(username))
+            .orElseThrow(() -> new UsernameNotFoundException("Invalid authentication"));
 
         return new CustomUserDetails(member);
     }

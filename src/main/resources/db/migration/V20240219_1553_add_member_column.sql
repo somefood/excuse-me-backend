@@ -2,5 +2,5 @@ ALTER TABLE member
     ADD COLUMN name VARCHAR(255) NOT NULL,
     ADD COLUMN gender ENUM('MEN', 'WOMEN') NOT NULL,
     ADD COLUMN birth_date DATE NOT NULL,
-    ADD COLUMN phone_number VARCHAR(13) NOT NULL;
+    ADD COLUMN phone_number VARCHAR(11) NOT NULL;
 

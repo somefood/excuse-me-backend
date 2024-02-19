@@ -32,7 +32,8 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String username;
+    @Enumerated
+    private UserName username;
 
     private String password;
 
@@ -45,13 +46,14 @@ public class Member extends BaseEntity {
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
-    @Column(name = "phone_number")
-    private String phoneNumber;
+    @Enumerated
+    private PhoneNumber phoneNumber;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private Member(final String username,
+    private Member(final Long id,
+                   final String username,
                    final String password,
                    final String name,
                    final String gender,
@@ -59,12 +61,13 @@ public class Member extends BaseEntity {
                    final String phoneNUmber,
                    final Role role
     ) {
-        this.username = username;
+        this.id = id;
+        this.username = new UserName(username);
         this.password = password;
         this.name = name;
         this.gender = Gender.valueOf(gender);
         this.birthDate = LocalDate.parse(birthDate, DateTimeFormatter.ofPattern(DATE_FORMAT));
-        this.phoneNumber = phoneNUmber;
+        this.phoneNumber = new PhoneNumber(phoneNUmber);
         this.role = role;
     }
 
@@ -75,7 +78,7 @@ public class Member extends BaseEntity {
                                             final String birthDate,
                                             final String phoneNumber
     ) {
-        return new Member(username, password, name, gender, birthDate, phoneNumber, Role.USER);
+        return new Member(null, username, password, name, gender, birthDate, phoneNumber, Role.USER);
     }
 
     public static Member createAdminMember(final String username,
@@ -85,6 +88,14 @@ public class Member extends BaseEntity {
                                            final String birthDate,
                                            final String phoneNUmber
     ) {
-        return new Member(username, password, name, gender, birthDate, phoneNUmber, Role.ADMIN);
+        return new Member(null, username, password, name, gender, birthDate, phoneNUmber, Role.ADMIN);
+    }
+
+    public String getUsername() {
+        return username.getValue();
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber.getValue();
     }
 }

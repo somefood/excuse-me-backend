@@ -2,9 +2,10 @@ package choorai.excuseme.member.application;
 
 import choorai.excuseme.global.security.JwtProvider;
 import choorai.excuseme.member.application.dto.LoginRequest;
-import choorai.excuseme.member.application.dto.SignRequest;
 import choorai.excuseme.member.application.dto.LoginResponse;
+import choorai.excuseme.member.application.dto.SignRequest;
 import choorai.excuseme.member.domain.Member;
+import choorai.excuseme.member.domain.UserName;
 import choorai.excuseme.member.domain.repository.MemberRepository;
 import choorai.excuseme.member.exception.MemberErrorCode;
 import choorai.excuseme.member.exception.MemberException;
@@ -23,7 +24,7 @@ public class MemberService {
     private final JwtProvider jwtProvider;
 
     public LoginResponse login(final LoginRequest loginRequest) {
-        final Member foundMember = memberRepository.findByUsername(loginRequest.id())
+        final Member foundMember = memberRepository.findByUsername(new UserName(loginRequest.id()))
             .orElseThrow(() -> new MemberException(MemberErrorCode.USERNAME_NOT_FOUND));
 
         if (!passwordEncoder.matches(loginRequest.password(), foundMember.getPassword())) {
