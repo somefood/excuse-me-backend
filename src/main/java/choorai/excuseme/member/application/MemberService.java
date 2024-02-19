@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final PasswordEncoder passwordEncoder;
+    private final PasswordChecker passwordChecker;
     private final MemberRepository memberRepository;
     private final JwtProvider jwtProvider;
 
@@ -38,6 +39,8 @@ public class MemberService {
 
     @Transactional
     public void register(final SignRequest signRequest) {
+        passwordChecker.validate(signRequest.password());
+
         final Member newMember = Member.createNormalMember(
             signRequest.id(),
             passwordEncoder.encode(signRequest.password()),
