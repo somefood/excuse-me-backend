@@ -1,4 +1,4 @@
-package choorai.excuseme.member.domain.dto;
+package choorai.excuseme.oauth.domain.dto;
 
 import lombok.Builder;
 
