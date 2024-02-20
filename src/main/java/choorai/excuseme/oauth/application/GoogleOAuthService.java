@@ -1,8 +1,6 @@
-package choorai.excuseme.member.application;
+package choorai.excuseme.oauth.application;
 
-import choorai.excuseme.member.domain.dto.GoogleUser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import choorai.excuseme.oauth.domain.dto.GoogleUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -21,24 +19,22 @@ public class GoogleOAuthService {
     private static final String GOOGLE_USERINFO_REQUEST_URL = "https://www.googleapis.com/oauth2/v2/userinfo";
 
     private final RestTemplate restTemplate;
-    private final ObjectMapper objectMapper;
 
-    public GoogleUser getGoogleUser(String accessToken) throws JsonProcessingException {
-        ResponseEntity<String> userInfoResponse = requestUserInfo(accessToken);
-        String userInfo = userInfoResponse.getBody();
-        log.info("Google User Info  = {}", userInfo);
-        return objectMapper.readValue(userInfo, GoogleUser.class);
+    public GoogleUser getGoogleUser(String accessToken) {
+        ResponseEntity<GoogleUser> userInfoResponse = requestUserInfo(accessToken);
+        GoogleUser googleUser = userInfoResponse.getBody();
+        log.info("Google User Info  = {}", googleUser);
+        return googleUser;
     }
 
-    private ResponseEntity<String> requestUserInfo(String accessToken) {
+    private ResponseEntity<GoogleUser> requestUserInfo(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
-
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
         return restTemplate.exchange(
                 GOOGLE_USERINFO_REQUEST_URL,
                 HttpMethod.GET,
                 request,
-                String.class);
+                GoogleUser.class);
     }
 }

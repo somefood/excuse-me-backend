@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
     private final MemberService memberService;
-    private final OauthService oauthService;
 
     @PostMapping("/register")
     public ResponseEntity<Void> signup(@RequestBody final SignRequest signRequest) {
@@ -34,13 +33,5 @@ public class MemberController {
     public ResponseEntity<LoginResponse> login(@RequestBody final LoginRequest loginRequest) {
         final LoginResponse loginResponse = memberService.login(loginRequest);
         return new ResponseEntity<>(loginResponse, HttpStatus.OK);
-    }
-
-    @PostMapping("/oauth/login/{loginType}")
-    public ResponseEntity<SignResponse> oauthLogin(
-            @PathVariable("loginType") String socialLoginType,
-            @RequestBody OAuthRequest oAuthRequest) {
-        SignResponse oAuthResponse = oauthService.oAuthLogin(socialLoginType, oAuthRequest);
-        return new ResponseEntity<>(oAuthResponse, HttpStatus.OK);
     }
 }

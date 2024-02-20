@@ -42,3 +42,6 @@ management:
 jwt:
   secret:
     key: WgNeE$H*rHx'edDr$u7KTP)`dz9B$;b=
+
+oauth:
+  password : oauthPassword
