@@ -26,8 +26,8 @@ public class LectureController {
     }
 
     @GetMapping("/lectures/{lectureId}")
-    public ResponseEntity<LectureDetailResponse> getLectureById(@AuthenticationPrincipal(expression = "member") final Member member, @PathVariable(name = "lectureId") final Long lectureId) {
-        LectureDetailResponse response = lectureService.getLectureById(member, lectureId);
+    public ResponseEntity<LectureDetailResponse> getLectureById(@PathVariable(name = "lectureId") final Long lectureId) {
+        LectureDetailResponse response = lectureService.getLectureById(lectureId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

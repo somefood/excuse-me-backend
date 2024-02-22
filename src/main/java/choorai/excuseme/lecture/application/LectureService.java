@@ -35,7 +35,7 @@ public class LectureService {
                 .toList();
     }
 
-    public LectureDetailResponse getLectureById(Member member, Long lectureId) {
+    public LectureDetailResponse getLectureById(final Long lectureId) {
         Lecture lecture = lectureRepository.findById(lectureId)
                 .orElseThrow(() -> new LectureException(LectureErrorCode.LECTURE_NOT_FOUND));
 
