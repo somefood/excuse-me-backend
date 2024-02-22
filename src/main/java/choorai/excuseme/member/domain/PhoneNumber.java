@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class PhoneNumber {
 
+    // 숫자 11자리 정규식
     private static final Pattern PHONE_NUMBER_FORMAT = Pattern.compile("^\\d{11}$");
 
     @Column(name = "phone_number", nullable = false, length = 11)
