@@ -2,6 +2,7 @@ package choorai.excuseme.member.domain;
 
 import choorai.excuseme.global.domain.BaseEntity;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -32,7 +33,7 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated
+    @Embedded
     private UserName username;
 
     private String password;
@@ -42,11 +43,10 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @Temporal(TemporalType.DATE)
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
-    @Enumerated
+    @Embedded
     private PhoneNumber phoneNumber;
 
     @Enumerated(EnumType.STRING)
