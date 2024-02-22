@@ -14,12 +14,5 @@ public interface MemberLectureRepository extends JpaRepository<MemberLecture, Lo
 
     List<MemberLecture> findByMember(Member member);
 
-//    @Query(value = """
-//            SELECT mr FROM MemberLecture mr
-//            RIGHT JOIN
-//            WHERE memb
-//            """)
-//    Optional<MemberLecture> findByMemberIdAndLectureId(@Param("memberId") Long memberId, @Param("lectureId") Long lectureId);
-
     Optional<MemberLecture> findByMemberAndLecture(final Member member, final Lecture lecture);
 }

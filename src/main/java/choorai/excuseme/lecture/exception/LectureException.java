@@ -7,7 +7,6 @@ import java.util.Map;
 
 public class LectureException extends CommonException {
 
-
     public LectureException(ErrorCode errorCode, Map<String, Object> additionalInfos) {
         super(errorCode, additionalInfos);
     }
