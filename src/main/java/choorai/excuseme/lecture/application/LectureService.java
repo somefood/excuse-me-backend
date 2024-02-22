@@ -60,6 +60,6 @@ public class LectureService {
         MemberLecture memberLecture = memberLectureRepository.findByMemberAndLecture(member, foundLecture)
                 .orElseGet(() -> memberLectureRepository.save(new MemberLecture(member, foundLecture)));
 
-        memberLecture.changeProgressStatus(lectureRequest.getProgressStatus());
+        memberLecture.changeProgressStatus(lectureRequest.progressStatus());
     }
 }
