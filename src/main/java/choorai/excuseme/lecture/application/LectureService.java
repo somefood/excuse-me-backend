@@ -57,9 +57,8 @@ public class LectureService {
         Lecture foundLecture = lectureRepository.findById(lectureId)
                 .orElseThrow(() -> new LectureException(LectureErrorCode.LECTURE_NOT_FOUND));
 
-        MemberLecture memberLecture = null;
-        Optional<MemberLecture> optional = memberLectureRepository.findByMemberAndLecture(member, foundLecture);
-        memberLecture = optional.orElseGet(() -> memberLectureRepository.save(new MemberLecture(member, foundLecture)));
+        MemberLecture memberLecture = memberLectureRepository.findByMemberAndLecture(member, foundLecture)
+                .orElseGet(() -> memberLectureRepository.save(new MemberLecture(member, foundLecture)));
 
         memberLecture.changeProgressStatus(lectureRequest.getProgressStatus());
     }
