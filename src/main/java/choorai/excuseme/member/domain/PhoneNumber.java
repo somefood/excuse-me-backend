@@ -19,7 +19,7 @@ public class PhoneNumber {
 
     private static final Pattern PHONE_NUMBER_FORMAT = Pattern.compile("^\\d{11}$");
 
-    @Column(name = "phone_number", nullable = false)
+    @Column(name = "phone_number", nullable = false, length = 11)
     private String value;
 
     public PhoneNumber(final String value) {
