@@ -26,7 +26,6 @@ public class MemberLecture extends BaseEntity {
     private Lecture lecture;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "VARCHAR(255) NOT NULL")
     private ProgressStatus progressStatus;
 
     public MemberLecture(final Member member, final Lecture lecture) {
