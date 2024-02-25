@@ -20,9 +20,9 @@ public class GoogleOAuthService {
 
     private final RestTemplate restTemplate;
 
-    public GoogleUser getGoogleUser(String accessToken) {
-        ResponseEntity<GoogleUser> userInfoResponse = requestUserInfo(accessToken);
-        GoogleUser googleUser = userInfoResponse.getBody();
+    public GoogleUser getGoogleUser(final String accessToken) {
+        final ResponseEntity<GoogleUser> userInfoResponse = requestUserInfo(accessToken);
+        final GoogleUser googleUser = userInfoResponse.getBody();
         log.info("Google User Info  = {}", googleUser);
         return googleUser;
     }
@@ -30,7 +30,7 @@ public class GoogleOAuthService {
     private ResponseEntity<GoogleUser> requestUserInfo(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
+        final HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
         return restTemplate.exchange(
                 GOOGLE_USERINFO_REQUEST_URL,
                 HttpMethod.GET,

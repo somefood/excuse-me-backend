@@ -21,7 +21,7 @@ public class OauthController {
     public ResponseEntity<SignResponse> oauthLogin(
             @PathVariable("loginType") String socialLoginType,
             @RequestBody OAuthRequest oAuthRequest) {
-        SignResponse oAuthResponse = oauthService.oAuthLogin(socialLoginType, oAuthRequest);
+        final SignResponse oAuthResponse = oauthService.oAuthLogin(socialLoginType, oAuthRequest);
         return new ResponseEntity<>(oAuthResponse, HttpStatus.OK);
     }
 }

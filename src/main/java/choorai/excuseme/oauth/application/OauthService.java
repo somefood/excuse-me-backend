@@ -30,12 +30,12 @@ public class OauthService {
     @Value("${oauth.password}")
     private String oauthPassword;
 
-    public SignResponse oAuthLogin(String socialLoginType, OAuthRequest oAuthRequest) {
-        String accessToken = oAuthRequest.accessToken();
+    public SignResponse oAuthLogin(String socialLoginType, final OAuthRequest oAuthRequest) {
+        final String accessToken = oAuthRequest.accessToken();
         socialLoginType = socialLoginType.toUpperCase();
         if (socialLoginType.equals("GOOGLE")) {
             try {
-                GoogleUser googleUser = googleOAuthService.getGoogleUser(accessToken);
+                final GoogleUser googleUser = googleOAuthService.getGoogleUser(accessToken);
                 return getOAuthResponse(googleUser.email());
             } catch (Exception e) {
                 log.debug("origin Error = {}", e);
@@ -45,9 +45,9 @@ public class OauthService {
         throw new OauthException(OauthErrorCode.INVALID_SOCIAL_LOGIN_TYPE);
     }
 
-    private SignResponse getOAuthResponse(String username) {
-        Optional<Member> findMember = memberRepository.findByUsername(username);
-        SignRequest signRequest = SignRequest.builder()
+    private SignResponse getOAuthResponse(final String username) {
+        final Optional<Member> findMember = memberRepository.findByUsername(username);
+        final SignRequest signRequest = SignRequest.builder()
                 .username(username)
                 .password(oauthPassword)
                 .build();
@@ -58,18 +58,18 @@ public class OauthService {
     }
 
     @Transactional
-    private void register(SignRequest signRequest) {
-        Member newMember = Member.createNormalMember(
+    private void register(final SignRequest signRequest) {
+        final Member newMember = Member.createNormalMember(
                 signRequest.getUsername(),
                 passwordEncoder.encode(signRequest.getPassword())
         );
         memberRepository.save(newMember);
     }
 
-    private SignResponse login(SignRequest signRequest) {
-        Member foundMember = memberRepository.findByUsername(signRequest.getUsername())
+    private SignResponse login(final SignRequest signRequest) {
+        final Member foundMember = memberRepository.findByUsername(signRequest.getUsername())
                 .orElseThrow(() -> new OauthException(OauthErrorCode.USERNAME_NOT_FOUND));
-        String accessToken = jwtProvider.createToken(foundMember.getUsername(), foundMember.getRole());
+        final String accessToken = jwtProvider.createToken(foundMember.getUsername(), foundMember.getRole());
 
         return SignResponse.builder()
                 .id(foundMember.getId())
