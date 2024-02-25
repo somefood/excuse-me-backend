@@ -5,18 +5,17 @@ import choorai.excuseme.member.domain.Member;
 import choorai.excuseme.member.domain.dto.SignRequest;
 import choorai.excuseme.member.domain.dto.SignResponse;
 import choorai.excuseme.member.domain.repository.MemberRepository;
-import choorai.excuseme.member.exception.MemberErrorCode;
-import choorai.excuseme.member.exception.MemberException;
 import choorai.excuseme.oauth.domain.dto.GoogleUser;
 import choorai.excuseme.oauth.domain.dto.OAuthRequest;
+import choorai.excuseme.oauth.exception.OauthErrorCode;
+import choorai.excuseme.oauth.exception.OauthException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -40,10 +39,10 @@ public class OauthService {
                 return getOAuthResponse(googleUser.email());
             } catch (Exception e) {
                 log.debug("origin Error = {}", e);
-                throw new MemberException(MemberErrorCode.FAIL_GOOGLE_OAUTH);
+                throw new OauthException(OauthErrorCode.FAIL_GOOGLE_OAUTH);
             }
         }
-        throw new MemberException(MemberErrorCode.INVALID_SOCIAL_LOGIN_TYPE);
+        throw new OauthException(OauthErrorCode.INVALID_SOCIAL_LOGIN_TYPE);
     }
 
     private SignResponse getOAuthResponse(String username) {
@@ -69,7 +68,7 @@ public class OauthService {
 
     private SignResponse login(SignRequest signRequest) {
         Member foundMember = memberRepository.findByUsername(signRequest.getUsername())
-                .orElseThrow(() -> new MemberException(MemberErrorCode.USERNAME_NOT_FOUND));
+                .orElseThrow(() -> new OauthException(OauthErrorCode.USERNAME_NOT_FOUND));
         String accessToken = jwtProvider.createToken(foundMember.getUsername(), foundMember.getRole());
 
         return SignResponse.builder()
