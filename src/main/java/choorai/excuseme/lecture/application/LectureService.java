@@ -12,12 +12,10 @@ import choorai.excuseme.member.exception.MemberErrorCode;
 import choorai.excuseme.member.exception.MemberException;
 import choorai.excuseme.memberlecutre.domain.MemberLecture;
 import choorai.excuseme.memberlecutre.domain.repository.MemberLectureRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
