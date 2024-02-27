@@ -22,13 +22,13 @@ public class LectureController {
     @GetMapping("/lectures")
     public ResponseEntity<List<LectureResponse>> getLectures() {
         List<LectureResponse> lectureResponses = lectureService.getLectures();
-        return new ResponseEntity<>(lectureResponses, HttpStatus.OK);
+        return ResponseEntity.ok(lectureResponses);
     }
 
     @GetMapping("/lectures/{lectureId}")
     public ResponseEntity<LectureDetailResponse> getLectureById(@PathVariable(name = "lectureId") final Long lectureId) {
         LectureDetailResponse response = lectureService.getLectureById(lectureId);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/lectures/{lectureId}")
