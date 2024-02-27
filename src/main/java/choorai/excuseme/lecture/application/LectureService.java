@@ -26,7 +26,7 @@ public class LectureService {
     private final MemberLectureRepository memberLectureRepository;
 
     public List<LectureResponse> getLectures() {
-        List<Lecture> lectures = lectureRepository.findAll();
+        final List<Lecture> lectures = lectureRepository.findAll();
 
         return lectures.stream()
                 .map(l -> new LectureResponse(l.getId(), l.getName()))
@@ -34,7 +34,7 @@ public class LectureService {
     }
 
     public LectureDetailResponse getLectureById(final Long lectureId) {
-        Lecture lecture = lectureRepository.findById(lectureId)
+        final Lecture lecture = lectureRepository.findById(lectureId)
                 .orElseThrow(() -> new LectureException(LectureErrorCode.LECTURE_NOT_FOUND));
 
         return new LectureDetailResponse(
@@ -52,10 +52,10 @@ public class LectureService {
             throw new MemberException(MemberErrorCode.USERNAME_NOT_FOUND);
         }
 
-        Lecture foundLecture = lectureRepository.findById(lectureId)
+        final Lecture foundLecture = lectureRepository.findById(lectureId)
                 .orElseThrow(() -> new LectureException(LectureErrorCode.LECTURE_NOT_FOUND));
 
-        MemberLecture memberLecture = memberLectureRepository.findByMemberAndLecture(member, foundLecture)
+        final MemberLecture memberLecture = memberLectureRepository.findByMemberAndLecture(member, foundLecture)
                 .orElseGet(() -> memberLectureRepository.save(new MemberLecture(member, foundLecture)));
 
         memberLecture.changeProgressStatus(lectureRequest.progressStatus());
