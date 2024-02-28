@@ -23,4 +23,10 @@ public class Lecture extends BaseEntity {
     private String thumbnail;
 
     private String videoUrl;
+
+    public Lecture(String name, String thumbnail, String videoUrl) {
+        this.name = name;
+        this.thumbnail = thumbnail;
+        this.videoUrl = videoUrl;
+    }
 }
