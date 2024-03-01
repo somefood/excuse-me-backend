@@ -12,27 +12,19 @@ import choorai.excuseme.member.domain.repository.MemberRepository;
 import choorai.excuseme.memberlecutre.domain.MemberLecture;
 import choorai.excuseme.memberlecutre.domain.ProgressStatus;
 import choorai.excuseme.memberlecutre.domain.repository.MemberLectureRepository;
+import choorai.excuseme.support.AcceptanceTest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.Optional;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.context.support.WithMockUser;
 
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class LectureControllerTest {
+class LectureControllerTest extends AcceptanceTest {
 
-    @LocalServerPort
-    private int port;
     @Autowired
     private JwtProvider jwtProvider;
 
@@ -48,11 +40,6 @@ class LectureControllerTest {
     @Autowired
     private MemberRepository memberRepository;
 
-    @BeforeEach
-    void setUp() {
-        RestAssured.port = port;
-    }
-
     @AfterEach
     void afterEach() {
         memberLectureRepository.deleteAll();
@@ -61,7 +48,6 @@ class LectureControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
     @DisplayName("강의를 시청한다.")
     void watch_lecture() throws Exception {
         // given
@@ -87,10 +73,7 @@ class LectureControllerTest {
             normalMember,
             lecture);
 
-        assertThat(registeredMemberLecture).isNotEmpty();
-
         final MemberLecture memberLecture = registeredMemberLecture.get();
-
         assertThat(memberLecture.getProgressStatus()).isEqualTo(ProgressStatus.COMPLETED);
     }
 }
