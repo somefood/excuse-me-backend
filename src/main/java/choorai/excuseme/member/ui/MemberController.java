@@ -1,8 +1,6 @@
 package choorai.excuseme.member.ui;
 
 import choorai.excuseme.member.application.MemberService;
-import choorai.excuseme.member.domain.dto.SignRequest;
-import choorai.excuseme.member.domain.dto.SignResponse;
 import choorai.excuseme.member.application.dto.LoginRequest;
 import choorai.excuseme.member.application.dto.LoginResponse;
 import choorai.excuseme.member.application.dto.SignRequest;

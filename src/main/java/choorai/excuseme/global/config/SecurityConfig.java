@@ -56,7 +56,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(configurer ->
                 configurer.requestMatchers("/actuator/**", "/error/**").permitAll()
-                        .requestMatchers("/members/register", "/members/login", "/members/oauth/login").permitAll()
+                        .requestMatchers("/members/register", "/members/login", "/oauth/login/**").permitAll()
                         .anyRequest().authenticated()
         );
         return http.build();

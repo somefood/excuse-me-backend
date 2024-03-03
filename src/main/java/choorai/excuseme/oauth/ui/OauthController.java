@@ -1,6 +1,6 @@
 package choorai.excuseme.oauth.ui;
 
-import choorai.excuseme.member.domain.dto.SignResponse;
+import choorai.excuseme.member.application.dto.LoginResponse;
 import choorai.excuseme.oauth.application.OauthService;
 import choorai.excuseme.oauth.domain.dto.OAuthRequest;
 import lombok.RequiredArgsConstructor;
@@ -18,10 +18,10 @@ public class OauthController {
     private final OauthService oauthService;
 
     @PostMapping("/login/{loginType}")
-    public ResponseEntity<SignResponse> oauthLogin(
+    public ResponseEntity<LoginResponse> oauthLogin(
             @PathVariable("loginType") String socialLoginType,
             @RequestBody OAuthRequest oAuthRequest) {
-        final SignResponse oAuthResponse = oauthService.oAuthLogin(socialLoginType, oAuthRequest);
+        final LoginResponse oAuthResponse = oauthService.oAuthLogin(socialLoginType, oAuthRequest);
         return new ResponseEntity<>(oAuthResponse, HttpStatus.OK);
     }
 }

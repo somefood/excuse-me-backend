@@ -1,9 +1,10 @@
 package choorai.excuseme.oauth.application;
 
 import choorai.excuseme.global.security.JwtProvider;
+import choorai.excuseme.member.application.dto.LoginResponse;
+import choorai.excuseme.member.application.dto.SignRequest;
 import choorai.excuseme.member.domain.Member;
-import choorai.excuseme.member.domain.dto.SignRequest;
-import choorai.excuseme.member.domain.dto.SignResponse;
+import choorai.excuseme.member.domain.UserName;
 import choorai.excuseme.member.domain.repository.MemberRepository;
 import choorai.excuseme.oauth.domain.dto.GoogleUser;
 import choorai.excuseme.oauth.domain.dto.OAuthRequest;
@@ -30,7 +31,19 @@ public class OauthService {
     @Value("${oauth.password}")
     private String oauthPassword;
 
-    public SignResponse oAuthLogin(String socialLoginType, final OAuthRequest oAuthRequest) {
+    @Value("${oauth.name}")
+    private String oauthName;
+
+    @Value("${oauth.gender}")
+    private String oauthGender;
+
+    @Value("${oauth.birthDate}")
+    private String oauthBirthDate;
+
+    @Value("${oauth.phoneNumber}")
+    private String oauthPhonenumber;
+
+    public LoginResponse oAuthLogin(String socialLoginType, final OAuthRequest oAuthRequest) {
         final String accessToken = oAuthRequest.accessToken();
         socialLoginType = socialLoginType.toUpperCase();
         if (socialLoginType.equals("GOOGLE")) {
@@ -45,12 +58,15 @@ public class OauthService {
         throw new OauthException(OauthErrorCode.INVALID_SOCIAL_LOGIN_TYPE);
     }
 
-    private SignResponse getOAuthResponse(final String username) {
-        final Optional<Member> findMember = memberRepository.findByUsername(username);
-        final SignRequest signRequest = SignRequest.builder()
-                .username(username)
-                .password(oauthPassword)
-                .build();
+    private LoginResponse getOAuthResponse(final String id) {
+        final Optional<Member> findMember = memberRepository.findByUsername(new UserName(id));
+        final SignRequest signRequest = new SignRequest(
+            id,
+            oauthPassword,
+            oauthName,
+            oauthGender,
+            oauthBirthDate,
+            oauthPhonenumber);
         if (findMember.isEmpty()) {
             register(signRequest);
         }
@@ -60,22 +76,26 @@ public class OauthService {
     @Transactional
     private void register(final SignRequest signRequest) {
         final Member newMember = Member.createNormalMember(
-                signRequest.getUsername(),
-                passwordEncoder.encode(signRequest.getPassword())
+            signRequest.id(),
+            passwordEncoder.encode(signRequest.password()),
+            signRequest.name(),
+            signRequest.gender(),
+            signRequest.birthDate(),
+            signRequest.phoneNumber()
         );
         memberRepository.save(newMember);
     }
 
-    private SignResponse login(final SignRequest signRequest) {
-        final Member foundMember = memberRepository.findByUsername(signRequest.getUsername())
-                .orElseThrow(() -> new OauthException(OauthErrorCode.USERNAME_NOT_FOUND));
+    private LoginResponse login(final SignRequest signRequest) {
+        final Member foundMember = memberRepository.findByUsername(new UserName(signRequest.id()))
+            .orElseThrow(() -> new OauthException(OauthErrorCode.USERNAME_NOT_FOUND));
         final String accessToken = jwtProvider.createToken(foundMember.getUsername(), foundMember.getRole());
 
-        return SignResponse.builder()
-                .id(foundMember.getId())
-                .username(foundMember.getUsername())
-                .token(accessToken)
-                .role(foundMember.getRole())
-                .build();
+        return LoginResponse.builder()
+            .id(foundMember.getId())
+            .username(foundMember.getUsername())
+            .token(accessToken)
+            .role(foundMember.getRole())
+            .build();
     }
 }
