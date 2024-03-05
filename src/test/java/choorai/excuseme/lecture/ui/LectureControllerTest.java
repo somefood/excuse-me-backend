@@ -51,7 +51,14 @@ class LectureControllerTest extends AcceptanceTest {
     @DisplayName("강의를 시청한다.")
     void watch_lecture() throws Exception {
         // given
-        final Member normalMember = Member.createNormalMember("excuseme", passwordEncoder.encode("excuseme"));
+        final Member normalMember = Member.createNormalMember(
+            "excuseme",
+            passwordEncoder.encode("excuseme"),
+            "excuseme",
+            "MEN",
+            "19990101",
+            "01012345678"
+        );
         memberRepository.save(normalMember);
 
         final Lecture lecture = new Lecture("lecture1", "thumbnail", "videoUrl");
