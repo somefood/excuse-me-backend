@@ -2,7 +2,6 @@ package choorai.excuseme.member.ui;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import choorai.excuseme.global.exception.CommonException;
 import choorai.excuseme.global.exception.dto.CustomExceptionResponse;
 import choorai.excuseme.member.application.dto.LoginRequest;
 import choorai.excuseme.member.application.dto.LoginResponse;
@@ -14,7 +13,6 @@ import choorai.excuseme.member.exception.MemberErrorCode;
 import choorai.excuseme.support.AcceptanceTest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import io.restassured.response.ResponseBodyExtractionOptions;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import org.assertj.core.api.SoftAssertions;
@@ -94,6 +92,35 @@ class MemberControllerTest extends AcceptanceTest {
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(result.code()).isEqualTo(MemberErrorCode.WRONG_USERNAME.getCode());
             softAssertions.assertThat(result.errorMessage()).isEqualTo(MemberErrorCode.WRONG_USERNAME.getMessage());
+        });
+    }
+
+    @DisplayName("문자, 숫자, 특수문자를 포함한 6자 이상 20자 이하가 아닌 비밀번호 입력을 받으면 예외가 발생한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"12345678902", "@!@#%$&^#!@", "absdcsdesgs", "as!asds.asc", "a1s3f4c2b5s", "!2#4%6&8@1!",
+        "ds@a1", "ddksc@123asvs@123ddksc2"})
+    void fail_register_with_wrongPassword(String password) {
+        // given
+        final SignRequest request = new SignRequest("a@email.com",
+                                                    password,
+                                                    "이름",
+                                                    "MEN",
+                                                    "20240219",
+                                                    "01012341234");
+
+        // when
+        final CustomExceptionResponse result = RestAssured
+            .given().body(request).contentType(ContentType.JSON)
+            .when().post("/members/register")
+            .then().statusCode(HttpStatus.BAD_REQUEST.value())
+            .extract().body().as(CustomExceptionResponse.class);
+
+        // then
+        final MemberErrorCode expect = MemberErrorCode.WRONG_PASSWORD;
+
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(result.code()).isEqualTo(expect.getCode());
+            softAssertions.assertThat(result.errorMessage()).isEqualTo(expect.getMessage());
         });
     }
 
