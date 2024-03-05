@@ -11,24 +11,31 @@ import choorai.excuseme.member.domain.repository.MemberRepository;
 import choorai.excuseme.support.AcceptanceTest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 class MemberControllerTest extends AcceptanceTest {
 
     @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @AfterEach
     void cleanData() {
         memberRepository.deleteAll();
     }
 
-    @DisplayName("일반 회원가입을 수행한다.")
+    @DisplayName("일반 회원가입을 성공한다.")
     @Test
     void register_member() {
         // given
@@ -46,8 +53,17 @@ class MemberControllerTest extends AcceptanceTest {
             .then().statusCode(HttpStatus.CREATED.value());
 
         // then
-        final Optional<Member> registeredMember = memberRepository.findByUsername(new UserName(request.id()));
-        assertThat(registeredMember).isNotEmpty();
+        final Member registeredMember = memberRepository.findByUsername(new UserName(request.id())).get();
+
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(registeredMember.getUsername()).isEqualTo(request.id());
+            softAssertions.assertThat(passwordEncoder.matches(request.password(), registeredMember.getPassword())).isTrue();
+            softAssertions.assertThat(registeredMember.getName()).isEqualTo(request.name());
+            softAssertions.assertThat(registeredMember.getGender().name()).isEqualTo(request.gender());
+            softAssertions.assertThat(registeredMember.getBirthDate()).isEqualTo(
+                LocalDate.parse(request.birthDate(), DateTimeFormatter.ofPattern("yyyyMMdd")));
+            softAssertions.assertThat(registeredMember.getPhoneNumber()).isEqualTo(request.phoneNumber());
+        });
     }
 
     @DisplayName("일반 로그인을 수행한다.")
