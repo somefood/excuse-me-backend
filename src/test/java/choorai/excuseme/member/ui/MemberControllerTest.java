@@ -2,22 +2,27 @@ package choorai.excuseme.member.ui;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import choorai.excuseme.global.exception.CommonException;
+import choorai.excuseme.global.exception.dto.CustomExceptionResponse;
 import choorai.excuseme.member.application.dto.LoginRequest;
 import choorai.excuseme.member.application.dto.LoginResponse;
 import choorai.excuseme.member.application.dto.SignRequest;
 import choorai.excuseme.member.domain.Member;
 import choorai.excuseme.member.domain.UserName;
 import choorai.excuseme.member.domain.repository.MemberRepository;
+import choorai.excuseme.member.exception.MemberErrorCode;
 import choorai.excuseme.support.AcceptanceTest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.response.ResponseBodyExtractionOptions;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -63,6 +68,32 @@ class MemberControllerTest extends AcceptanceTest {
             softAssertions.assertThat(registeredMember.getBirthDate()).isEqualTo(
                 LocalDate.parse(request.birthDate(), DateTimeFormatter.ofPattern("yyyyMMdd")));
             softAssertions.assertThat(registeredMember.getPhoneNumber()).isEqualTo(request.phoneNumber());
+        });
+    }
+
+    @DisplayName("이메일 형식이 아닌 id 입력을 받으면 예외가 발생한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"id", "as!asds.asc", "as@asdsc.sdsa"})
+    void fail_register_with_wrongId(String id) {
+        // given
+        final SignRequest request = new SignRequest(id,
+                                                    "password1@",
+                                                    "이름",
+                                                    "MEN",
+                                                    "20240219",
+                                                    "01012341234");
+
+        // when
+        final CustomExceptionResponse result = RestAssured
+            .given().body(request).contentType(ContentType.JSON)
+            .when().post("/members/register")
+            .then().statusCode(HttpStatus.BAD_REQUEST.value())
+            .extract().body().as(CustomExceptionResponse.class);
+
+        // then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(result.code()).isEqualTo(MemberErrorCode.WRONG_USERNAME.getCode());
+            softAssertions.assertThat(result.errorMessage()).isEqualTo(MemberErrorCode.WRONG_USERNAME.getMessage());
         });
     }
 
