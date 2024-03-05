@@ -124,6 +124,34 @@ class MemberControllerTest extends AcceptanceTest {
         });
     }
 
+    @DisplayName("11자리 숫자가 아닌 전화번호를 입력받으면 예외를 발생한다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"abcdefghijk", "!@#$%^&*!@#", "123456789012", "1234567890"})
+    void fail_register_with_wrongPhoneNumber(String phoneNumber) {
+        // given
+        final SignRequest request = new SignRequest("a@email.com",
+                                                    "password1@",
+                                                    "이름",
+                                                    "MEN",
+                                                    "20240219",
+                                                    phoneNumber);
+
+        // when
+        final CustomExceptionResponse result = RestAssured
+            .given().body(request).contentType(ContentType.JSON)
+            .when().post("/members/register")
+            .then().statusCode(HttpStatus.BAD_REQUEST.value())
+            .extract().body().as(CustomExceptionResponse.class);
+
+        // then
+        final MemberErrorCode expect = MemberErrorCode.WRONG_PHONE_NUMBER;
+
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(result.code()).isEqualTo(expect.getCode());
+            softAssertions.assertThat(result.errorMessage()).isEqualTo(expect.getMessage());
+        });
+    }
+
     @DisplayName("일반 로그인을 수행한다.")
     @Test
     void login_member() {
