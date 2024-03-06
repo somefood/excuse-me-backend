@@ -86,6 +86,35 @@ class LectureControllerTest extends AcceptanceTest {
     }
 
     @Test
+    @DisplayName("특정 강의 조회를 조회한다.")
+    void find_lecture() throws Exception {
+        // given
+        final Member normalMember = Member.createNormalMember(
+            "a@email.com",
+            passwordEncoder.encode("password1@"),
+            "이름",
+            "MEN",
+            "19990101",
+            "01012345678"
+        );
+        memberRepository.save(normalMember);
+
+        final Lecture newLecture = lectureRepository.save(new Lecture("lecture", "thumbnail", "videoUrl"));
+        final String accessToken = jwtProvider.createToken("a@email.com", Role.USER);
+
+        // when
+        final ExtractableResponse<Response> response = RestAssured
+            .given().headers("Authorization", "Bearer " + accessToken)
+            .when().get("/lectures/" + newLecture.getId())
+            .then().statusCode(HttpStatus.OK.value())
+            .extract();
+
+        // then
+        final Integer id = response.jsonPath().get("id");
+        assertThat(id.longValue()).isEqualTo(newLecture.getId());
+    }
+
+    @Test
     @DisplayName("강의를 시청한다.")
     void watch_lecture() throws Exception {
         // given
