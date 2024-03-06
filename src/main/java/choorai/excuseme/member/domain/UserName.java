@@ -18,8 +18,7 @@ import lombok.NoArgsConstructor;
 public class UserName {
 
     // 이메일 형식의 정규식
-    private static final Pattern USERNAME_FORMAT = Pattern.compile(
-        "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$");
+    private static final Pattern USERNAME_FORMAT = Pattern.compile("[a-z0-9]+@[a-z]+\\.[a-z]{2,3}");
 
     @Column(name = "username", nullable = false)
     private String value;
