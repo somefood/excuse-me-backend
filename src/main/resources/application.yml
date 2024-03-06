@@ -42,3 +42,10 @@ management:
 jwt:
   secret:
     key: WgNeE$H*rHx'edDr$u7KTP)`dz9B$;b=
+
+oauth:
+  password : oauthPassword
+  name: oauthName
+  gender: MEN
+  birthDate: 19990101
+  phoneNumber: 01012345678
