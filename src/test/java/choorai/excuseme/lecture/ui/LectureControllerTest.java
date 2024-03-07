@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import choorai.excuseme.global.security.JwtProvider;
 import choorai.excuseme.lecture.domain.Lecture;
-import choorai.excuseme.lecture.domain.dto.LectureDetailResponse;
 import choorai.excuseme.lecture.domain.dto.LectureRequest;
 import choorai.excuseme.lecture.domain.dto.LectureResponse;
 import choorai.excuseme.lecture.domain.repository.LectureRepository;
@@ -55,7 +54,7 @@ class LectureControllerTest extends AcceptanceTest {
 
     @Test
     @DisplayName("전체 강의 목록을 조회한다.")
-    void find_all_lectures() throws Exception {
+    void find_all_lectures() {
         // given
         final Member normalMember = Member.createNormalMember(
             "a@email.com",
@@ -87,7 +86,7 @@ class LectureControllerTest extends AcceptanceTest {
 
     @Test
     @DisplayName("특정 강의 조회를 조회한다.")
-    void find_lecture() throws Exception {
+    void find_lecture() {
         // given
         final Member normalMember = Member.createNormalMember(
             "a@email.com",
@@ -116,7 +115,7 @@ class LectureControllerTest extends AcceptanceTest {
 
     @Test
     @DisplayName("강의를 시청한다.")
-    void watch_lecture() throws Exception {
+    void watch_lecture() {
         // given
         final Member normalMember = Member.createNormalMember(
             "a@email.com",
