@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import choorai.excuseme.global.security.JwtProvider;
 import choorai.excuseme.lecture.domain.Lecture;
+import choorai.excuseme.lecture.domain.dto.LectureDetailResponse;
 import choorai.excuseme.lecture.domain.dto.LectureRequest;
 import choorai.excuseme.lecture.domain.dto.LectureResponse;
 import choorai.excuseme.lecture.domain.repository.LectureRepository;
@@ -16,8 +17,6 @@ import choorai.excuseme.memberlecutre.domain.repository.MemberLectureRepository;
 import choorai.excuseme.support.AcceptanceTest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -73,15 +72,14 @@ class LectureControllerTest extends AcceptanceTest {
         final String accessToken = jwtProvider.createToken("a@email.com", Role.USER);
 
         // when
-        final ExtractableResponse<Response> response = RestAssured
+        final List<LectureResponse> response = RestAssured
             .given().headers("Authorization", "Bearer " + accessToken)
             .when().get("/lectures")
             .then().statusCode(HttpStatus.OK.value())
-            .extract();
+            .extract().jsonPath().getList("", LectureResponse.class);
 
         // then
-        final List<LectureResponse> lectureResponses = response.jsonPath().getList("", LectureResponse.class);
-        assertThat(lectureResponses.size()).isEqualTo(10);
+        assertThat(response.size()).isEqualTo(10);
     }
 
     @Test
@@ -102,15 +100,14 @@ class LectureControllerTest extends AcceptanceTest {
         final String accessToken = jwtProvider.createToken("a@email.com", Role.USER);
 
         // when
-        final ExtractableResponse<Response> response = RestAssured
+        final LectureDetailResponse response = RestAssured
             .given().headers("Authorization", "Bearer " + accessToken)
             .when().get("/lectures/" + newLecture.getId())
             .then().statusCode(HttpStatus.OK.value())
-            .extract();
+            .extract().body().as(LectureDetailResponse.class);
 
         // then
-        final Integer id = response.jsonPath().get("id");
-        assertThat(id.longValue()).isEqualTo(newLecture.getId());
+        assertThat(response.id()).isEqualTo(newLecture.getId());
     }
 
     @Test
