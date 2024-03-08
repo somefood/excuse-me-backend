@@ -54,7 +54,7 @@ public class JwtProvider {
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-    private String getAccount(String token) {
+    public String getAccount(String token) {
         return getClaims(token)
                 .getBody()
                 .getSubject();
