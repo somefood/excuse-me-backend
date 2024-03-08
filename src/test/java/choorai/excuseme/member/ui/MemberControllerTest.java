@@ -185,4 +185,27 @@ class MemberControllerTest extends AcceptanceTest {
             softAssertions.assertThat(tokenInfo).isEqualTo(member.getUsername());
         });
     }
+
+
+    @DisplayName("존재하지 않는 아이디로 로그인을 하면 예외를 발생한다.")
+    @Test
+    void fail_login_with_wrongId() {
+        // given
+        final LoginRequest request = new LoginRequest("wrongId@mail.com", "password!1");
+
+        // when
+        final CustomExceptionResponse result = RestAssured
+            .given().body(request).contentType(ContentType.JSON)
+            .when().post("members/login")
+            .then().statusCode(HttpStatus.BAD_REQUEST.value())
+            .extract().body().as(CustomExceptionResponse.class);
+
+        // then
+        final MemberErrorCode expect = MemberErrorCode.USERNAME_NOT_FOUND;
+
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(result.code()).isEqualTo(expect.getCode());
+            softAssertions.assertThat(result.errorMessage()).isEqualTo(expect.getMessage());
+        });
+    }
 }
