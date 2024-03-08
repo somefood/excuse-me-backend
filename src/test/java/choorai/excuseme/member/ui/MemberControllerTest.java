@@ -208,4 +208,35 @@ class MemberControllerTest extends AcceptanceTest {
             softAssertions.assertThat(result.errorMessage()).isEqualTo(expect.getMessage());
         });
     }
+
+    @DisplayName("잘못된 비밀번호로 로그인을 하면 예외를 발생한다.")
+    @Test
+    void fail_login_with_wrongPassword() {
+        // given
+        final String wrongPassword = "wrongPassword!2";
+        final Member member = Member.createNormalMember("a@email.com",
+                                                        passwordEncoder.encode("1password1!"),
+                                                        "이름",
+                                                        "MEN",
+                                                        "20240219",
+                                                        "01012341234");
+        memberRepository.save(member);
+
+        final LoginRequest request = new LoginRequest(member.getUsername(), wrongPassword);
+
+        // when
+        final CustomExceptionResponse result = RestAssured
+            .given().body(request).contentType(ContentType.JSON)
+            .when().post("members/login")
+            .then().statusCode(HttpStatus.BAD_REQUEST.value())
+            .extract().body().as(CustomExceptionResponse.class);
+
+        // then
+        final MemberErrorCode expect = MemberErrorCode.WRONG_PASSWORD;
+
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(result.code()).isEqualTo(expect.getCode());
+            softAssertions.assertThat(result.errorMessage()).isEqualTo(expect.getMessage());
+        });
+    }
 }
