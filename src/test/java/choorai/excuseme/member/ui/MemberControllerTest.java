@@ -1,8 +1,7 @@
 package choorai.excuseme.member.ui;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import choorai.excuseme.global.exception.dto.CustomExceptionResponse;
+import choorai.excuseme.global.security.JwtProvider;
 import choorai.excuseme.member.application.dto.LoginRequest;
 import choorai.excuseme.member.application.dto.LoginResponse;
 import choorai.excuseme.member.application.dto.SignRequest;
@@ -32,6 +31,9 @@ class MemberControllerTest extends AcceptanceTest {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtProvider jwtProvider;
 
     @AfterEach
     void cleanData() {
@@ -152,30 +154,89 @@ class MemberControllerTest extends AcceptanceTest {
         });
     }
 
-    @DisplayName("일반 로그인을 수행한다.")
+    @DisplayName("일반 로그인을 성공한다.")
     @Test
     void login_member() {
         // given
-        final SignRequest registerRequest = new SignRequest("a@email.com",
-                                                            "1password1!",
-                                                            "이름",
-                                                            "MEN",
-                                                            "20240219",
-                                                            "01012341234");
-        RestAssured
-            .given().body(registerRequest).contentType(ContentType.JSON)
-            .when().post("/members/register");
+        final String password = "1password1!";
+        final Member member = Member.createNormalMember("a@email.com",
+                                                        passwordEncoder.encode(password),
+                                                        "이름",
+                                                        "MEN",
+                                                        "20240219",
+                                                        "01012341234");
+        memberRepository.save(member);
 
-        final LoginRequest request = new LoginRequest(registerRequest.id(), registerRequest.password());
+        final LoginRequest request = new LoginRequest(member.getUsername(), password);
 
         // when
-        final LoginResponse response = RestAssured
+        final LoginResponse result = RestAssured
             .given().body(request).contentType(ContentType.JSON)
             .when().post("members/login")
             .then().statusCode(HttpStatus.OK.value())
             .extract().body().as(LoginResponse.class);
 
         // then
-        assertThat(response.username()).isEqualTo(request.id());
+        final String token = result.token();
+        final String tokenInfo = jwtProvider.getAccount(token);
+
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(result.username()).isEqualTo(member.getUsername());
+            softAssertions.assertThat(tokenInfo).isEqualTo(member.getUsername());
+        });
+    }
+
+
+    @DisplayName("존재하지 않는 아이디로 로그인을 하면 예외를 발생한다.")
+    @Test
+    void fail_login_with_wrongId() {
+        // given
+        final LoginRequest request = new LoginRequest("wrongId@mail.com", "password!1");
+
+        // when
+        final CustomExceptionResponse result = RestAssured
+            .given().body(request).contentType(ContentType.JSON)
+            .when().post("members/login")
+            .then().statusCode(HttpStatus.BAD_REQUEST.value())
+            .extract().body().as(CustomExceptionResponse.class);
+
+        // then
+        final MemberErrorCode expect = MemberErrorCode.USERNAME_NOT_FOUND;
+
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(result.code()).isEqualTo(expect.getCode());
+            softAssertions.assertThat(result.errorMessage()).isEqualTo(expect.getMessage());
+        });
+    }
+
+    @DisplayName("잘못된 비밀번호로 로그인을 하면 예외를 발생한다.")
+    @Test
+    void fail_login_with_wrongPassword() {
+        // given
+        final String wrongPassword = "wrongPassword!2";
+        final Member member = Member.createNormalMember("a@email.com",
+                                                        passwordEncoder.encode("1password1!"),
+                                                        "이름",
+                                                        "MEN",
+                                                        "20240219",
+                                                        "01012341234");
+        memberRepository.save(member);
+
+        final LoginRequest request = new LoginRequest(member.getUsername(), wrongPassword);
+
+        // when
+        final CustomExceptionResponse result = RestAssured
+            .given().body(request).contentType(ContentType.JSON)
+            .when().post("members/login")
+            .then().statusCode(HttpStatus.BAD_REQUEST.value())
+            .extract().body().as(CustomExceptionResponse.class);
+
+        // then
+        final MemberErrorCode expect = MemberErrorCode.WRONG_PASSWORD;
+
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(result.code()).isEqualTo(expect.getCode());
+            softAssertions.assertThat(result.errorMessage()).isEqualTo(expect.getMessage());
+        });
     }
 }
