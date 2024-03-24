@@ -1,0 +1,52 @@
+spring:
+  datasource:
+#    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:tc:mysql:8://excuse-me
+    username: root
+    password: test
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+    open-in-view: false
+
+  flyway:
+    enabled: true
+    url: jdbc:tc:mysql:8://excuse-me
+    user: root
+    password: test
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
+slack:
+  webhook-uri: https://hooks.slack.com/services/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
+
+management:
+  endpoint:
+    health:
+      show-components: always # db, disk, ping 등 추가적인 연결 확인도 할 수 있음. 전부 UP이어야 최종 status가 UP
+  endpoints:
+    web:
+      exposure:
+        include: health # web으로 접속 시 표시할 항목 추가
+
+jwt:
+  secret:
+    key: WgNeE$H*rHx'edDr$u7KTP)`dz9B$;b=
+
+oauth:
+  password : oauthPassword
+  name: oauthName
+  gender: MEN
+  birthDate: 19990101
+  phoneNumber: 01012345678
